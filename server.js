@@ -44,7 +44,12 @@ const db = mysql.createConnection(
 //Get all candidates
 app.get('/api/candidates', (req, res) => {
     //set our command in a variable
-    const sql = `SELECT * FROM candidates`;
+    //uses JOIN to add a row from a different table
+    const sql = `SELECT candidates.*, parties.name
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON candidates.party_id = parties.id`;
 
     db.query(sql, (err, rows) => {
         if (err) {
@@ -63,7 +68,13 @@ app.get('/api/candidates', (req, res) => {
 //(the route end point, paramaters, create function)
 app.get('/api/candidate/:id', (req, res) => {
     //set command in a variable for the query
-    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    //use JOIN to add information from another table and where it will be placed with LEFT JOIN
+    const sql = `SELECT candidates.*, parties.name 
+                 AS party_name 
+                 FROM candidates 
+                 LEFT JOIN parties 
+                 ON candidates.party_id = parties.id 
+                 WHERE candidates.id = ?`;
     const params = [req.params.id];
 
     //(command,arguments, create function)
