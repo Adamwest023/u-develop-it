@@ -1,6 +1,8 @@
 //imports express into the file
-const exp = require('constants');
 const express = require('express');
+
+//connect to the database
+const db = require('./db/connection');
 
 //connects to routes in our apiRoutes folder 
 //node.js will automatically look for index.js
@@ -13,13 +15,12 @@ const PORT = process.env.PORT || 3001;
 //adds the app expression
 const app = express();
 
-
 //adds the Express.js middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //creates a route to the apiRoutes
-app.use('./api',apiRoutes);
+app.use('/api',apiRoutes);
 
 // route test (don't delete for example purpose)
 // app.get('/', (req,res) => {
@@ -48,7 +49,10 @@ app.use((req, res) => {
 });
 
 //starts the express.js on port 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
+db.connect(err => {
+    if (err) throw err;
+    console.log('Database connected.');
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  });
