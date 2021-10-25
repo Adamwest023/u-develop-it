@@ -12,4 +12,4 @@ const db = mysql.createConnection(
         database: 'election'
     });
 
-module.exports =db;
+module.exports = db;
